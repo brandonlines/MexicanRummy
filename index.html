@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A bright, accessible Mexican Rummy scorekeeper for hosted games."
+    />
+    <title>Mexican Rummy Scorekeeper</title>
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <header class="app-header" aria-label="Application header">
+      <div class="brand-block">
+        <p class="eyebrow">Mexican Rummy</p>
+        <h1>Scorekeeper</h1>
+      </div>
+      <div class="header-actions" aria-live="polite">
+        <span id="connectionStatus" class="status-pill">Offline setup</span>
+        <button id="copyRoomButton" class="secondary-action hidden" type="button">
+          Copy link
+        </button>
+      </div>
+    </header>
+
+    <main id="main" class="shell">
+      <section id="welcomeView" class="welcome-grid" aria-labelledby="welcomeTitle">
+        <div class="intro-panel">
+          <p class="eyebrow">Live table tracking</p>
+          <h2 id="welcomeTitle">Host the table or join from your phone.</h2>
+          <p>
+            Track scores, completed hands, and what each player has left across all
+            ten Mexican Rummy contracts.
+          </p>
+          <div class="feature-row" aria-label="App highlights">
+            <span>10 hands</span>
+            <span>Live room</span>
+            <span>Accessible</span>
+          </div>
+        </div>
+
+        <div class="setup-panel" aria-label="Game setup">
+          <div class="tabs" role="tablist" aria-label="Choose setup mode">
+            <button id="hostTab" class="tab-button active" type="button" role="tab" aria-selected="true">
+              Host
+            </button>
+            <button id="joinTab" class="tab-button" type="button" role="tab" aria-selected="false">
+              Join
+            </button>
+          </div>
+
+          <form id="hostForm" class="setup-form" aria-label="Host a game">
+            <label for="hostName">Host name</label>
+            <input id="hostName" name="hostName" type="text" autocomplete="name" placeholder="Jamie" />
+
+            <label for="initialPlayers">Players</label>
+            <textarea
+              id="initialPlayers"
+              name="initialPlayers"
+              rows="4"
+              placeholder="Add names separated by commas, or leave blank and add them later"
+            ></textarea>
+
+            <button class="primary-action" type="submit">Create room</button>
+            <button id="localGameButton" class="secondary-action" type="button">
+              Start local scorecard
+            </button>
+          </form>
+
+          <form id="joinForm" class="setup-form hidden" aria-label="Join a game">
+            <label for="joinName">Your name</label>
+            <input id="joinName" name="joinName" type="text" autocomplete="name" placeholder="Alex" />
+
+            <label for="roomCode">Room code</label>
+            <input
+              id="roomCode"
+              name="roomCode"
+              type="text"
+              autocapitalize="characters"
+              autocomplete="off"
+              placeholder="MR-1234"
+            />
+
+            <button class="primary-action" type="submit">Join room</button>
+          </form>
+        </div>
+      </section>
+
+      <section id="gameView" class="game-view hidden" aria-label="Scorekeeper">
+        <div class="game-toolbar">
+          <div>
+            <p class="eyebrow">Room</p>
+            <h2 id="roomHeading">Local game</h2>
+          </div>
+          <div class="toolbar-actions">
+            <button id="saveSnapshotButton" class="secondary-action" type="button">
+              Export
+            </button>
+            <label class="import-button host-only">
+              <span>Import</span>
+              <input id="importSnapshotInput" type="file" accept="application/json" />
+            </label>
+            <button id="newGameButton" class="danger-action" type="button">New game</button>
+          </div>
+        </div>
+
+        <section class="table-section" aria-labelledby="scoreboardTitle">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Table</p>
+              <h3 id="scoreboardTitle">Scoreboard</h3>
+            </div>
+            <form id="addPlayerForm" class="inline-form host-only" aria-label="Add player">
+              <label class="sr-only" for="newPlayerName">New player name</label>
+              <input id="newPlayerName" type="text" placeholder="New player" autocomplete="off" />
+              <button type="submit" class="secondary-action">Add</button>
+            </form>
+          </div>
+          <div class="scoreboard-wrap">
+            <table class="scoreboard">
+              <caption>
+                Player scores and hand progress
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Player</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Hands done</th>
+                  <th scope="col">Remaining</th>
+                </tr>
+              </thead>
+              <tbody id="scoreboardBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="player-workspace" aria-label="Player details">
+          <div class="player-list-panel">
+            <div class="section-heading compact">
+              <div>
+                <p class="eyebrow">Players</p>
+                <h3>Choose player</h3>
+              </div>
+            </div>
+            <div id="playerButtons" class="player-buttons" role="list"></div>
+          </div>
+
+          <div class="details-panel">
+            <div class="section-heading">
+              <div>
+                <p id="selectedPlayerMeta" class="eyebrow">No player selected</p>
+                <h3 id="selectedPlayerName">Player details</h3>
+              </div>
+              <p id="selectedPlayerTotal" class="score-chip">0 pts</p>
+            </div>
+
+            <div id="emptyState" class="empty-state">
+              Add or select a player to begin tracking hands and score.
+            </div>
+
+            <div id="playerDetails" class="hidden">
+              <section aria-labelledby="handsTitle">
+                <div class="section-heading compact">
+                  <div>
+                    <p class="eyebrow">Contracts</p>
+                    <h4 id="handsTitle">Hands achieved and left</h4>
+                  </div>
+                  <p id="handsSummary" class="summary-text">0 of 10 complete</p>
+                </div>
+                <div id="handsGrid" class="hands-grid"></div>
+              </section>
+
+              <section class="score-editor host-only" aria-labelledby="scoreEditorTitle">
+                <div class="section-heading compact">
+                  <div>
+                    <p class="eyebrow">Round score</p>
+                    <h4 id="scoreEditorTitle">Add score</h4>
+                  </div>
+                </div>
+                <form id="scoreForm" class="score-form">
+                  <div class="field">
+                    <label for="scoreAmount">Points</label>
+                    <input id="scoreAmount" type="number" inputmode="numeric" min="-999" max="999" step="1" />
+                  </div>
+
+                  <div class="field">
+                    <label for="scoreNote">Note</label>
+                    <input id="scoreNote" type="text" placeholder="Round 4, went out, bonus..." />
+                  </div>
+
+                  <button type="submit" class="primary-action">Add score</button>
+                </form>
+              </section>
+
+              <section aria-labelledby="scoreHistoryTitle">
+                <div class="section-heading compact">
+                  <div>
+                    <p class="eyebrow">History</p>
+                    <h4 id="scoreHistoryTitle">Score entries</h4>
+                  </div>
+                </div>
+                <ol id="scoreHistory" class="score-history"></ol>
+              </section>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
