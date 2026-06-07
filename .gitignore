@@ -31,6 +31,7 @@ dist/
 /next.config.js
 /tsconfig.json
 /tsconfig.tsbuildinfo
+/globals.css
 /public/models/
 /public/hdri/
 /public/textures/
