@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build
+dist/
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Claude Code local config (contains local tooling state / keys — never commit)
+.claude/
+
+# Unrelated leftover "hamster" 3D-game files (not part of Mexican Rummy)
+/audio.ts
+/world.ts
+/three-scene.ts
+/sneaky-hamster-game.tsx
+/types.ts
+/next-env.d.ts
+/next.config.js
+/tsconfig.json
+/tsconfig.tsbuildinfo
+/public/models/
+/public/hdri/
+/public/textures/
+/public/CREDITS.md

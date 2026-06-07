@@ -1,0 +1,28 @@
+{
+  "name": "mexican-rummy-scoring",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A real-time multiplayer scoring app for Mexican Rummy",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && git subtree push --prefix dist origin gh-pages",
+    "cap:sync": "npm run build && cap sync",
+    "cap:ios": "npm run build && cap sync ios && cap open ios",
+    "cap:android": "npm run build && cap sync android && cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.4",
+    "@capacitor/core": "^8.3.4",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.3.4",
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.3.4",
+    "vite": "^5.0.0"
+  }
+}

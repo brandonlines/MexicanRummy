@@ -1,0 +1,173 @@
+/* ===== components.css — restyled, token-driven, SAME class names ===== */
+
+body {
+  margin:0; padding:0; font-family:var(--font-family); font-size:var(--font-size-base);
+  line-height:var(--line-height-normal); color:var(--color-text); background-color:var(--color-bg);
+  transition: background-color var(--dur-normal) var(--ease-standard), color var(--dur-normal) var(--ease-standard);
+}
+main { display:flex; flex-direction:column; min-height:100dvh; }
+@supports not (min-height:100dvh) { main { min-height:100vh; } }
+
+h1,h2,h3,h4,h5,h6 { margin:0 0 var(--spacing-md); line-height:var(--line-height-tight); color:var(--color-text); letter-spacing:var(--tracking-tight); }
+h1 { font-size:var(--font-size-3xl); font-weight:var(--weight-bold); }
+h2 { font-size:var(--font-size-2xl); font-weight:var(--weight-bold); }
+h3 { font-size:var(--font-size-xl);  font-weight:var(--weight-semibold); }
+p  { margin:0 0 var(--spacing-md); }
+[data-theme="cozy"] h1,[data-theme="cozy"] h2,[data-theme="cozy"] h3 { font-family:var(--font-display); }
+
+/* HEADER (moved out of app.js; safe-area + landscape rules reproduced verbatim) */
+.header {
+  background:var(--gradient-header); color:var(--color-on-header);
+  padding:var(--spacing-2xl) var(--spacing-md);
+  padding-top:calc(var(--spacing-2xl) + env(safe-area-inset-top)); /* PRESERVE */
+  box-shadow:var(--shadow-lg); position:relative; z-index:var(--z-header);
+}
+[data-theme="cozy"] .header { border-bottom:var(--border-width-thick) solid var(--color-accent); }
+@media (max-height:480px){ .header{ padding-top:calc(var(--spacing-md) + env(safe-area-inset-top)); padding-bottom:var(--spacing-md);} }
+.header h1 { color:var(--color-on-header); margin:0; }
+[data-theme="cozy"] .header h1 { font-family:var(--font-display); letter-spacing:0; }
+.header .subtitle,.header .header-muted { color:var(--color-on-header-muted); font-size:var(--font-size-lg); margin:var(--spacing-sm) 0 0; }
+/* Header focus override MUST beat the global *:focus-visible (.header *:focus-visible
+   has specificity (0,1,1) vs *:focus-visible (0,1,0) -> .header wins). */
+.header *:focus-visible,
+.header .btn-on-header:focus-visible,
+.header .btn-outline:focus-visible { outline:4px solid var(--focus-on-header); outline-offset:var(--focus-offset); }
+
+/* Buttons — scoped transition (NO transition:all); springy press */
+button,[role="button"]{
+  font-family:var(--font-family); font-size:var(--font-size-base);
+  padding:var(--spacing-md) var(--spacing-lg); border:none; border-radius:var(--border-radius-md);
+  cursor:pointer; font-weight:var(--weight-semibold); text-decoration:none; display:inline-block; user-select:none;
+  transition: transform var(--dur-fast) var(--ease-spring), background-color var(--dur-fast) var(--ease-standard),
+              box-shadow var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard),
+              color var(--dur-fast) var(--ease-standard);
+}
+.btn-primary{ background-color:var(--color-primary); color:var(--color-on-primary); box-shadow:var(--shadow-md);}
+.btn-primary:hover{ background-color:var(--color-primary-dark); box-shadow:var(--shadow-lg);}
+.btn-primary:active{ transform:scale(0.97);}
+.btn-secondary{ background-color:var(--color-secondary); color:var(--color-on-secondary); box-shadow:var(--shadow-md);}
+.btn-secondary:hover{ background-color:var(--color-secondary-dark); box-shadow:var(--shadow-lg);}
+.btn-secondary:active{ transform:scale(0.97);}
+.btn-outline{ border:var(--border-width-thick) solid var(--color-primary); color:var(--color-primary); background-color:transparent;}
+.btn-outline:hover{ background-color:var(--color-primary); color:var(--color-on-primary);}
+.btn-outline:active{ transform:scale(0.97);}
+.btn-small{ padding:var(--spacing-sm) var(--spacing-md); font-size:var(--font-size-sm); min-height:var(--touch-target-min); min-width:var(--touch-target-min);}
+.btn-large{ padding:var(--spacing-lg) var(--spacing-xl); font-size:var(--font-size-lg);}
+.btn-block{ width:100%;}
+/* Replaces inline color:white;border-color:white on header buttons */
+.btn-on-header,.header .btn-outline{ color:var(--color-on-header); border-color:var(--color-on-header); background-color:transparent;}
+.btn-on-header:hover,.header .btn-outline:hover{ background-color:var(--color-on-header); color:var(--color-header-bg);}
+
+/* Forms — inset surface; >=16px preserved */
+input,textarea,select{
+  font-family:var(--font-family); font-size:var(--font-size-base); padding:var(--spacing-md);
+  border:var(--border-width-thick) solid var(--color-border); border-radius:var(--border-radius-md);
+  background-color:var(--color-surface); color:var(--color-text);
+  transition: border-color var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard);
+}
+input::placeholder,textarea::placeholder{ color:var(--color-text-secondary-solid);}
+input:hover,textarea:hover,select:hover,input:focus,textarea:focus,select:focus{ border-color:var(--color-primary);}
+.input-group{ display:flex; gap:var(--spacing-sm); align-items:stretch;}
+.input-group>input,.input-group>select{ flex:1;}
+/* The .sr-only checkbox inside .hand-tile must NOT paint the global 2px input border */
+.hand-tile input.sr-only{ border:0; padding:0; }
+
+/* Game code */
+.code-input{ text-transform:uppercase; letter-spacing:var(--tracking-code); font-variant-numeric:var(--numeric);}
+.code-hero{
+  display:inline-flex; align-items:center; gap:var(--spacing-sm); font-size:var(--font-size-2xl);
+  font-weight:var(--weight-bold); letter-spacing:var(--tracking-code); font-variant-numeric:var(--numeric);
+  color:var(--color-on-header); background:rgba(255,255,255,0.10); padding:var(--spacing-xs) var(--spacing-md);
+  border-radius:var(--border-radius-md); min-height:var(--touch-target-min); border:var(--border-width) solid var(--color-on-header-muted);
+}
+[data-theme="cozy"] .code-hero{ background:rgba(232,201,118,0.14); border-color:var(--color-accent);}
+
+/* Cards + surfaces (replaces .card on --color-bg-secondary; keeps :hover lift) */
+.card{ background-color:var(--color-surface); border:var(--border-width) solid var(--color-border);
+  border-radius:var(--border-radius-lg); padding:var(--spacing-lg); box-shadow:var(--shadow-sm);
+  transition: box-shadow var(--dur-normal) var(--ease-standard), transform var(--dur-normal) var(--ease-standard);}
+.card:hover{ box-shadow:var(--shadow-md);}
+.card--narrow{ max-width:var(--measure-narrow);} .card--md{ max-width:var(--measure-md);} .card--measure{ max-width:var(--measure);}
+.well,.surface-inset{ background-color:var(--color-surface-inset); border:var(--border-width) solid var(--color-border);
+  border-radius:var(--border-radius-md); padding:var(--spacing-md);}
+.roster-well{ min-height:var(--roster-min-height);}
+.roster-row{ display:flex; justify-content:space-between; align-items:center; padding:var(--spacing-sm) var(--spacing-md); border-bottom:var(--border-width) solid var(--color-hairline);}
+.roster-row:last-child{ border-bottom:none;}
+.plain-list{ list-style:none; padding:0; margin:0;}
+.divider-text{ color:var(--color-text-secondary-solid); margin-bottom:var(--spacing-sm); text-align:center;}
+
+/* HAND TILE — single component for both inline implementations; :focus-within fixes the AA gap */
+.hand-tile{ display:flex; flex-direction:column; align-items:center; justify-content:center;
+  min-height:var(--touch-target-min); padding:var(--spacing-sm); background:var(--color-surface-inset);
+  color:var(--color-text); border:var(--border-width-thick) solid var(--color-border); border-radius:var(--border-radius-md);
+  cursor:pointer; text-align:center;
+  transition: background-color var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard), transform var(--dur-fast) var(--ease-spring);}
+.hand-tile__num{ display:block; font-weight:var(--weight-semibold); font-size:var(--font-size-base);}
+.hand-tile__name{ display:block; font-size:var(--font-size-xs); color:var(--color-text-secondary-solid); margin-top:var(--spacing-xs);}
+.hand-tile__check{ margin-top:var(--spacing-xs);}
+/* JS toggles .hand-tile--complete authoritatively (baked from server state at render);
+   :has() is progressive enhancement for keyboard checking before the next render. */
+.hand-tile--complete,.hand-tile:has(input:checked){ background:var(--color-success); border-color:var(--color-success); color:var(--color-on-success); transform:scale(1.02);}
+.hand-tile--complete .hand-tile__name,.hand-tile:has(input:checked) .hand-tile__name{ color:var(--color-on-success);}
+.hand-tile:focus-within{ outline:var(--focus-outline); outline-offset:var(--focus-offset);}
+@keyframes tile-pop{ 0%{transform:scale(1);} 50%{transform:scale(1.12);} 100%{transform:scale(1.02);} }
+.hand-tile.is-marking{ animation:tile-pop var(--dur-normal) var(--ease-spring);}
+
+/* SCORE / STAT numerals */
+.score-display{ font-family:var(--font-numeric); font-size:var(--font-size-display); font-weight:var(--weight-bold); color:var(--color-primary); font-variant-numeric:var(--numeric); line-height:1;}
+.score-caption{ color:var(--color-text-secondary-solid); margin-bottom:var(--spacing-sm);}
+.stat-tile__value{ font-family:var(--font-numeric); font-size:var(--font-size-3xl); font-weight:var(--weight-bold); color:var(--color-primary); font-variant-numeric:var(--numeric); margin:0;}
+.h2h-tally{ font-family:var(--font-numeric); font-size:var(--font-size-display); font-weight:var(--weight-bold); text-align:center; font-variant-numeric:var(--numeric); margin:var(--spacing-md) 0;}
+@keyframes num-flash{ 0%{color:var(--color-accent); transform:scale(1.06);} 100%{color:var(--color-primary); transform:scale(1);} }
+.num-flash{ animation:num-flash var(--dur-slow) var(--ease-standard);}
+
+/* Tables — calm, theme-aware sticky header */
+table{ width:100%; border-collapse:collapse; font-size:var(--font-size-sm);}
+th{ background-color:var(--color-thead-bg); color:var(--color-thead-fg); padding:var(--spacing-md); text-align:left; font-weight:var(--weight-semibold); position:sticky; top:0; z-index:var(--z-sticky);}
+td{ padding:var(--spacing-md); border-bottom:var(--border-width) solid var(--color-hairline);}
+tr:hover{ background-color:var(--color-row-hover);}
+tr.is-me,tr[aria-current="true"]{ background-color:var(--color-row-me); box-shadow:inset 4px 0 0 var(--color-primary);} /* replaces inline outline */
+/* History TABLE podium rows: shared --grad-podium tokens applied to tr+cells so
+   table semantics survive AND text color is correct in dark mode (fixes the
+   current no-cell-color contrast bug). NOT the same as .podium-row (flex). */
+tr.rank-1{ background:var(--grad-podium-1);} tr.rank-2{ background:var(--grad-podium-2);} tr.rank-3{ background:var(--grad-podium-3);}
+tr.rank-1 td,tr.rank-1 th,tr.rank-2 td,tr.rank-2 th,tr.rank-3 td,tr.rank-3 th{ color:var(--color-on-podium); border-bottom-color:rgba(0,0,0,0.12);}
+tr.rank-1:hover{ background:var(--grad-podium-1);}
+tr.rank-2:hover{ background:var(--grad-podium-2);}
+tr.rank-3:hover{ background:var(--grad-podium-3);} /* keep medal bg on hover */
+
+/* Badges */
+.badge{ display:inline-block; padding:var(--spacing-xs) var(--spacing-sm); border-radius:var(--border-radius-full); font-size:var(--font-size-sm); font-weight:var(--weight-semibold);
+  background-color:var(--color-badge-neutral-bg); color:var(--color-badge-neutral-fg); border:var(--border-width) solid var(--color-badge-neutral-border);} /* bare .badge (Tie) is now visible */
+.badge-neutral{ background-color:var(--color-badge-neutral-bg); color:var(--color-badge-neutral-fg); border:var(--border-width) solid var(--color-badge-neutral-border);}
+.badge-primary{ background-color:var(--color-primary); color:var(--color-on-primary); border-color:transparent;}
+.badge-success{ background-color:var(--color-success); color:var(--color-on-success); border-color:transparent;}
+.badge-warning{ background-color:var(--color-warning); color:var(--color-on-warning); border-color:transparent;}
+
+/* Checkbox / radio */
+input[type="checkbox"],input[type="radio"]{ width:24px; height:24px; cursor:pointer; margin-right:var(--spacing-sm); accent-color:var(--color-primary);}
+
+/* Alerts — tokenized per theme/mode */
+.alert{ padding:var(--spacing-md) var(--spacing-lg); border-radius:var(--border-radius-md); margin-bottom:var(--spacing-md);}
+.alert-info{ background:var(--color-info-bg); color:var(--color-info-fg); border:var(--border-width) solid var(--color-info-border);}
+.alert-success{ background:var(--color-success-bg); color:var(--color-success-fg); border:var(--border-width) solid var(--color-success-border);}
+.alert-error{ background:var(--color-error-bg); color:var(--color-error-fg); border:var(--border-width) solid var(--color-error-border);}
+
+/* Podium — FLEX, summary ONLY (NOT history's table) */
+.podium-row{ display:flex; justify-content:space-between; align-items:center; padding:var(--spacing-md); border-radius:var(--border-radius-md); margin-bottom:var(--spacing-md); color:var(--color-on-podium);}
+.podium-row--1{ background:var(--grad-podium-1);} .podium-row--2{ background:var(--grad-podium-2);} .podium-row--3{ background:var(--grad-podium-3);}
+.podium-row__name{ font-size:var(--font-size-lg); font-weight:var(--weight-bold);}
+.podium-row .score-caption{ color:inherit; opacity:0.85;} /* caption legible on the metal */
+.podium-row__score{ font-family:var(--font-numeric); font-size:var(--font-size-2xl); font-weight:var(--weight-bold); font-variant-numeric:var(--numeric);}
+.summary-row{ display:flex; justify-content:space-between; align-items:center; padding:var(--spacing-md); border-radius:var(--border-radius-md); margin-bottom:var(--spacing-md); background:var(--color-surface-inset); color:var(--color-text);}
+.summary-row__score{ font-family:var(--font-numeric); font-size:var(--font-size-2xl); font-weight:var(--weight-bold); color:var(--color-primary); font-variant-numeric:var(--numeric);}
+
+/* Theme segmented control */
+.theme-switch{ display:inline-flex; gap:var(--spacing-xs); margin-top:var(--spacing-sm);}
+.theme-switch .btn[aria-pressed="true"]{ background-color:var(--color-on-header); color:var(--color-header-bg); border-color:var(--color-on-header);}
+.theme-switch .btn[aria-pressed="false"]{ background-color:transparent; color:var(--color-on-header); border:var(--border-width-thick) solid var(--color-on-header);}
+/* On the Stats settings row (light surface, not header): */
+.settings-row .theme-switch .btn[aria-pressed="true"]{ background-color:var(--color-primary); color:var(--color-on-primary); border-color:var(--color-primary);}
+.settings-row .theme-switch .btn[aria-pressed="false"]{ background-color:transparent; color:var(--color-primary); border:var(--border-width-thick) solid var(--color-primary);}
+
+.is-hidden{ display:none !important; }

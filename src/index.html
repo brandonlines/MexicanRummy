@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="A real-time multiplayer scoring app for Mexican Rummy">
+  <meta name="theme-color" content="#1c1c2e" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0a0a14" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mexican Rummy">
+  <title>Mexican Rummy Scoring</title>
+  <!-- Pre-paint theme bootstrap: sets data-theme before the stylesheets load so
+       there is no flash of the wrong theme; preloads the cozy font when active. -->
+  <script>
+    (function(){
+      var t='ios';
+      try{ var s=localStorage.getItem('mr-theme'); if(s==='ios'||s==='cozy') t=s; }catch(e){}
+      document.documentElement.setAttribute('data-theme',t);
+      if(t==='cozy'){
+        ['/fonts/Fraunces-SemiBold.woff2','/fonts/Fraunces-Bold.woff2'].forEach(function(href){
+          var l=document.createElement('link'); l.rel='preload'; l.as='font'; l.type='font/woff2';
+          l.href=href; l.crossOrigin='anonymous'; document.head.appendChild(l);
+        });
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="./styles/theme.css">
+  <link rel="stylesheet" href="./styles/layout.css">
+  <link rel="stylesheet" href="./styles/components.css">
+  <link rel="stylesheet" href="./styles/accessibility.css">
+  <link rel="stylesheet" href="./styles/motion.css">
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+/* ===== motion.css — linked after components.css; reduced-motion lives here ===== */
+
+/* PAGE TRANSITION — enter-only; router applies .page-enter ONLY on a real
+   page-name CHANGE (see motion.js), so game.js's per-push re-renders never replay it. */
+@keyframes page-enter{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:translateY(0);} }
+#app.page-enter > *{ animation:page-enter var(--dur-page) var(--ease-emphasized) both; }
+
+/* ROSTER list entrance / exit */
+@keyframes row-in{ from{ opacity:0; transform:translateX(-10px);} to{ opacity:1; transform:translateX(0);} }
+.roster-row.is-new{ animation:row-in var(--dur-normal) var(--ease-standard) both; }
+@keyframes row-out{ to{ opacity:0; transform:translateX(10px); height:0; padding:0; margin:0;} }
+.roster-row.is-leaving{ animation:row-out var(--dur-fast) var(--ease-standard) both; }
+
+/* PODIUM cascade (summary only) — stagger via inline --i */
+@keyframes podium-in{ from{ opacity:0; transform:translateY(14px) scale(0.98);} to{ opacity:1; transform:none;} }
+.podium-row,.summary-row{ animation:podium-in var(--dur-slow) var(--ease-emphasized) both; animation-delay:calc(var(--i,0) * var(--stagger-step)); }
+
+/* WIN spotlight reveal */
+@keyframes spotlight-in{ 0%{ opacity:0; transform:scale(0.9);} 60%{ transform:scale(1.03);} 100%{ opacity:1; transform:scale(1);} }
+.win-spotlight{ animation:spotlight-in 520ms var(--ease-spring) both; }
+
+/* DISCLOSURE expand (history 'View results') */
+.detail-region{ display:grid; grid-template-rows:0fr; transition:grid-template-rows var(--dur-normal) var(--ease-standard); }
+.detail-region.is-open{ grid-template-rows:1fr; }
+.detail-region > div{ overflow:hidden; }
+
+/* THEME cross-fade veil (bg snapshotted inline at creation — see theme.js) */
+@keyframes theme-fade{ from{opacity:0;} 50%{opacity:1;} to{opacity:0;} }
+.theme-fade-veil{ position:fixed; inset:0; z-index:var(--z-overlay); pointer-events:none; animation:theme-fade var(--dur-normal) var(--ease-standard) both; }
+
+/* CONFETTI canvas (class, not inline var() z-index) */
+.confetti-canvas{ position:fixed; inset:0; pointer-events:none; z-index:var(--z-confetti); }
+
+/* Subtle async content fade (h2h / leaderboard swaps) */
+@keyframes content-fade{ from{opacity:0;} to{opacity:1;} }
+.content-fade{ animation:content-fade var(--dur-normal) var(--ease-standard) both; }
+
+/* Appended cards (history 'Load more') — fade/rise in. (.roster-row.is-new
+   above handles list rows; this covers full-width card elements.) */
+.card.is-new{ animation:podium-in var(--dur-slow) var(--ease-emphasized) both; }
+
+/* ===== REDUCED MOTION — REPLACES the old accessibility.css block ===== */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ animation:none !important; transition:none !important; }
+  html{ scroll-behavior:auto !important; }
+  #app.page-enter > *{ transform:none !important; opacity:1 !important; }
+  .theme-fade-veil,.confetti-canvas{ display:none !important; }
+}

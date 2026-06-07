@@ -1,0 +1,37 @@
+/* ===== layout.css — PRESERVE all 3 safe-area rules verbatim ===== */
+.container{
+  width:100%; max-width:1200px; margin:0 auto; padding:var(--spacing-md);
+  /* Notch / rounded corners in landscape — PRESERVE exactly */
+  padding-left:max(var(--spacing-md), env(safe-area-inset-left));
+  padding-right:max(var(--spacing-md), env(safe-area-inset-right));
+  display:flex; flex-direction:column;
+}
+/* Home indicator clearance — PRESERVE (targets the page <main>, not header .container) */
+main.container{ padding-bottom:max(var(--spacing-md), env(safe-area-inset-bottom)); }
+
+/* The 3rd safe-area rule (header top) now lives in components.css .header and is PRESERVED:
+   padding-top: calc(var(--spacing-2xl) + env(safe-area-inset-top)); */
+
+.grid{ display:grid; gap:var(--spacing-md);}
+.grid-2{ grid-template-columns:repeat(auto-fit, minmax(300px,1fr));}
+.grid-3{ grid-template-columns:repeat(auto-fit, minmax(250px,1fr));}
+.grid-10{ display:grid; grid-template-columns:repeat(auto-fit, minmax(72px,1fr)); gap:var(--spacing-sm);}
+.flex{ display:flex;} .flex-center{ display:flex; align-items:center; justify-content:center;}
+.flex-col{ display:flex; flex-direction:column;}
+.flex-between{ display:flex; align-items:center; justify-content:space-between; gap:var(--spacing-md);}
+.gap-sm{gap:var(--spacing-sm)} .gap-md{gap:var(--spacing-md)} .gap-lg{gap:var(--spacing-lg)}
+.mx-auto{ margin-left:auto; margin-right:auto;}
+.mt-sm{margin-top:var(--spacing-sm)} .mt-md{margin-top:var(--spacing-md)} .mt-lg{margin-top:var(--spacing-lg)}
+.mb-sm{margin-bottom:var(--spacing-sm)} .mb-md{margin-bottom:var(--spacing-md)} .mb-lg{margin-bottom:var(--spacing-lg)}
+.p-sm{padding:var(--spacing-sm)} .p-md{padding:var(--spacing-md)} .p-lg{padding:var(--spacing-lg)}
+.text-center{text-align:center} .text-right{text-align:right}
+.full-width{width:100%} .full-height{height:100%}
+
+@media (max-width:768px){
+  .container{ padding:var(--spacing-sm);
+    padding-left:max(var(--spacing-sm), env(safe-area-inset-left));
+    padding-right:max(var(--spacing-sm), env(safe-area-inset-right)); }
+  .grid-2,.grid-3{ grid-template-columns:1fr; }
+  .hide-mobile{ display:none; }
+}
+@media (min-width:769px){ .show-mobile-only{ display:none; } }

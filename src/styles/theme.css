@@ -1,0 +1,246 @@
+/* ===== theme.css PART 1: theme-AGNOSTIC tokens (stay on :root) ===== */
+:root {
+  --spacing-xs: 0.25rem; --spacing-sm: 0.5rem; --spacing-md: 1rem;
+  --spacing-lg: 1.5rem; --spacing-xl: 2rem; --spacing-2xl: 3rem;
+
+  --font-size-xs: 0.75rem; --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;      /* 16px — load-bearing for iOS no-zoom inputs */
+  --font-size-lg: 1.25rem; --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem; --font-size-3xl: 2.5rem;
+  --font-size-display: 3.25rem; /* hero scores / win spotlight (iPad-friendly) */
+
+  --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: var(--font-family);          /* cozy overrides per-theme */
+  --font-numeric: ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --weight-regular: 400; --weight-medium: 500;
+  --weight-semibold: 600; --weight-bold: 700;
+
+  --line-height-tight: 1.2; --line-height-normal: 1.5; --line-height-relaxed: 1.75;
+
+  --tracking-code: 0.18em;     /* tokenizes the magic 0.15em code tracking */
+  --tracking-tight: -0.01em;
+  --numeric: tabular-nums;     /* scores/codes/stats stay jitter-free in count-up */
+
+  --border-radius-sm: 0.375rem; --border-radius-md: 0.625rem;
+  --border-radius-lg: 0.875rem; --border-radius-xl: 1.25rem; --border-radius-full: 9999px;
+
+  --border-width: 1px; --border-width-thick: 2px;
+
+  --touch-target-min: 44px;
+  --roster-min-height: 6.25rem;   /* 100px */
+  --measure: 40rem;               /* 640px */
+  --measure-narrow: 31.25rem;     /* 500px */
+  --measure-md: 37.5rem;          /* 600px */
+
+  --z-base: 0; --z-sticky: 10; --z-header: 20; --z-overlay: 90; --z-confetti: 95; --z-skip: 100;
+
+  --dur-fast: 150ms; --dur-normal: 250ms; --dur-slow: 350ms;
+  --dur-page: 320ms; --dur-countup: 700ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --stagger-step: 70ms;
+
+  /* Legacy aliases so the still-unconverted rules keep working during the refactor */
+  --transition-fast: var(--dur-fast) var(--ease-standard);
+  --transition-normal: var(--dur-normal) var(--ease-standard);
+  --transition-slow: var(--dur-slow) var(--ease-standard);
+  --focus-offset: 2px;
+}
+
+* { box-sizing: border-box; }
+html {
+  font-size: 16px;             /* anchors --font-size-base=16px (iOS no-zoom) — DO NOT change */
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+/* Cozy display face — self-hosted woff2 in src/public/fonts/ (Vite root:'src',
+   so src/public is the public dir -> copied verbatim to dist root). Reference with
+   an ABSOLUTE /fonts/ URL. This is the ONLY font mechanism — no main.js import,
+   no hashing. Only SemiBold(600) + Bold(700) are bundled; headings must not
+   request any other weight or the browser synthesizes/falls back. */
+@font-face { font-family:'Fraunces'; src:url('/fonts/Fraunces-SemiBold.woff2') format('woff2'); font-weight:600; font-style:normal; font-display:swap; }
+@font-face { font-family:'Fraunces'; src:url('/fonts/Fraunces-Bold.woff2') format('woff2'); font-weight:700; font-style:normal; font-display:swap; }
+
+/* ===== theme.css PART 2A: iOS-NATIVE theme (default) ===== */
+[data-theme="ios"] {
+  --color-primary: #007aff; --color-primary-light: #339dff; --color-primary-dark: #0a63cc;
+  --color-secondary: #5856d6; --color-secondary-dark: #3f3eb0;
+  --color-accent: #34c759;
+  --color-success: #248a3d;   /* AA w/ white; #34c759 too light for white text */
+  --color-warning: #b25000;   /* darkened iOS orange for AA on light */
+  --color-error: #d70015;
+
+  --color-on-primary: #ffffff; --color-on-secondary: #ffffff; --color-on-success: #ffffff;
+  --color-on-warning: #ffffff; --color-on-accent: #ffffff;
+
+  --color-bg: #f2f2f7;            /* systemGroupedBackground (page) */
+  --color-bg-secondary: #ffffff;
+  --color-surface: #ffffff;       /* card */
+  --color-surface-inset: #e9e9ef; /* wells / idle tiles / code field */
+  --color-text: #1c1c1e;
+  --color-text-secondary: #3c3c4399;        /* large/decorative only */
+  --color-text-secondary-solid: #6b6b70;    /* AA solid for small secondary text */
+  --color-border: #d1d1d6; --color-hairline: #c6c6c8;
+
+  --color-header-bg: #1c1c2e;
+  --gradient-header: linear-gradient(180deg, #232338, #1c1c2e);
+  --color-on-header: #ffffff; --color-on-header-muted: rgba(255,255,255,0.78);
+  --focus-on-header: #ffffff;
+
+  --color-focus: var(--color-primary);
+  --focus-outline: 4px solid var(--color-focus);
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 28px rgba(0,0,0,0.10);
+  --shadow-xl: 0 24px 48px rgba(0,0,0,0.14);
+
+  --color-info-bg:#e8f1ff; --color-info-fg:#0a3d8f; --color-info-border:#b8d4ff;
+  --color-success-bg:#e3f6e8; --color-success-fg:#145c2b; --color-success-border:#a9e0ba;
+  --color-error-bg:#ffe5e7; --color-error-fg:#a10010; --color-error-border:#ffb3b8;
+
+  --color-thead-bg:#ededf2; --color-thead-fg:#1c1c1e;
+  --color-row-hover:#f2f2f7; --color-row-me:#e4efff;
+
+  --grad-podium-1: linear-gradient(135deg, #ffe9a8, #f6c75a);
+  --grad-podium-2: linear-gradient(135deg, #eef0f3, #c9ced6);
+  --grad-podium-3: linear-gradient(135deg, #f3d8bd, #d9a877);
+  --color-on-podium: #2a2407;
+
+  --color-badge-neutral-bg: var(--color-surface-inset);
+  --color-badge-neutral-fg: var(--color-text);
+  --color-badge-neutral-border: var(--color-border);
+
+  --font-display: var(--font-family);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="ios"] {
+    --color-primary:#0a84ff; --color-primary-light:#4ea6ff; --color-primary-dark:#0060df;
+    --color-secondary:#5e5ce6; --color-secondary-dark:#4744c4; --color-accent:#30d158;
+    --color-success:#30d158; --color-on-success:#06210e;
+    --color-warning:#ff9f0a; --color-on-warning:#2a1800; --color-error:#ff453a;
+    --color-on-primary:#ffffff; --color-on-secondary:#ffffff; --color-on-accent:#06210e;
+
+    --color-bg:#000000; --color-bg-secondary:#1c1c1e;
+    --color-surface:#1c1c1e; --color-surface-inset:#2c2c2e;
+    --color-text:#ffffff; --color-text-secondary:#ebebf599; --color-text-secondary-solid:#aeaeb2;
+    --color-border:#38383a; --color-hairline:#48484a;
+
+    --color-header-bg:#0a0a14;
+    --gradient-header: linear-gradient(180deg, #15151f, #0a0a14);
+    --color-on-header:#ffffff; --color-on-header-muted:rgba(255,255,255,0.70);
+    --focus-on-header:#ffffff;
+
+    --shadow-sm:0 1px 2px rgba(0,0,0,0.5); --shadow-md:0 4px 12px rgba(0,0,0,0.55);
+    --shadow-lg:0 10px 28px rgba(0,0,0,0.6); --shadow-xl:0 24px 48px rgba(0,0,0,0.7);
+
+    --color-info-bg:#11233f; --color-info-fg:#9ec5ff; --color-info-border:#2b4a78;
+    --color-success-bg:#0f2c19; --color-success-fg:#7ee29a; --color-success-border:#2c5e3c;
+    --color-error-bg:#3a1416; --color-error-fg:#ff9a98; --color-error-border:#6e2b2c;
+
+    --color-thead-bg:#2c2c2e; --color-thead-fg:#ffffff;
+    --color-row-hover:#1c1c1e; --color-row-me:#11294a;
+
+    --grad-podium-1: linear-gradient(135deg, #7a5e12, #c9982f);
+    --grad-podium-2: linear-gradient(135deg, #4a4d52, #6f747c);
+    --grad-podium-3: linear-gradient(135deg, #5a3d22, #8a5e35);
+    --color-on-podium:#ffffff;
+
+    --color-badge-neutral-bg:#2c2c2e; --color-badge-neutral-fg:#ffffff; --color-badge-neutral-border:#48484a;
+  }
+}
+
+/* ===== theme.css PART 2B: COZY CARD TABLE theme ===== */
+[data-theme="cozy"] {
+  --color-primary:#b03a2e; --color-primary-light:#c75345; --color-primary-dark:#8c2c22; /* suit-red */
+  --color-secondary:#1f5f4b; --color-secondary-dark:#154435;                            /* felt green */
+  --color-accent:#b8860b;                                                                /* aged gold */
+  --color-success:#2e7d4f; --color-warning:#9a6a00; --color-error:#b3261e;
+
+  --color-on-primary:#fff6ee; --color-on-secondary:#fff6ee; --color-on-success:#ffffff;
+  --color-on-warning:#ffffff; --color-on-accent:#2a1d00;  /* dark on gold = AA */
+
+  --color-bg:#efe4d2;             /* warm parchment page */
+  --color-bg-secondary:#f7efe1;
+  --color-surface:#fbf5ea;        /* parchment card */
+  --color-surface-inset:#e6d8c1;  /* wells / idle tiles */
+  --color-text:#2b211a; --color-text-secondary:#6f5d49; --color-text-secondary-solid:#6f5d49;
+  --color-border:#cbb89c; --color-hairline:#d8c8ac;
+
+  --color-header-bg:#123127;
+  --gradient-header: linear-gradient(160deg, #1a4133, #0e271f);  /* deep felt */
+  --color-on-header:#f3e9d6; --color-on-header-muted:rgba(243,233,214,0.80);
+  --focus-on-header:#e8c976;      /* gold focus reads >=3:1 on felt */
+
+  /* Light suit-red would fail 3:1 on dark cozy cards; cozy uses the LIGHT primary
+     for focus so the ring stays >=3:1 on both parchment AND (dark-mode) charcoal. */
+  --color-focus: var(--color-primary-light);
+  --focus-outline: 4px solid var(--color-focus);
+
+  --shadow-sm:0 1px 2px rgba(60,40,20,0.10); --shadow-md:0 4px 14px rgba(60,40,20,0.14);
+  --shadow-lg:0 12px 30px rgba(40,25,10,0.18); --shadow-xl:0 26px 52px rgba(30,18,6,0.24);
+
+  --color-info-bg:#e9eef0; --color-info-fg:#234a55; --color-info-border:#b9cdd2;
+  --color-success-bg:#e4f0e6; --color-success-fg:#1f5c39; --color-success-border:#a7d2b3;
+  --color-error-bg:#f7e1de; --color-error-fg:#8c2018; --color-error-border:#e1ada6;
+
+  --color-thead-bg:#e3d4b8; --color-thead-fg:#2b211a;
+  --color-row-hover:#f1e7d6; --color-row-me:#f4e6c4;
+
+  --grad-podium-1: linear-gradient(135deg, #f3d27a, #c79a36);  /* gold */
+  --grad-podium-2: linear-gradient(135deg, #e4e1da, #b9b4a8);  /* silver */
+  --grad-podium-3: linear-gradient(135deg, #e6b98c, #b97d49);  /* bronze */
+  --color-on-podium:#2b1d05;
+
+  --color-badge-neutral-bg: var(--color-surface-inset);
+  --color-badge-neutral-fg: var(--color-text);
+  --color-badge-neutral-border: var(--color-border);
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="cozy"] {
+    --color-primary:#d2614f; --color-primary-light:#e8897a; --color-primary-dark:#b03a2e;
+    --color-secondary:#3a7d65; --color-secondary-dark:#2c6150; --color-accent:#e0b352;
+    --color-success:#57b07d; --color-on-success:#06210f;
+    --color-warning:#e0a73a; --color-on-warning:#2a1a00; --color-error:#e0685e;
+    --color-on-primary:#1a0c08; --color-on-secondary:#06210f; --color-on-accent:#241800;
+
+    --color-bg:#14110d;             /* near-black warm */
+    --color-bg-secondary:#1d1813;
+    --color-surface:#221c16;        /* charcoal card */
+    --color-surface-inset:#2c251d;
+    --color-text:#f0e6d6; --color-text-secondary:#c3b39d; --color-text-secondary-solid:#c3b39d;
+    --color-border:#4a3f30; --color-hairline:#5a4d3a;
+
+    --color-header-bg:#0c1f18;
+    --gradient-header: linear-gradient(160deg, #123127, #0a1812);
+    --color-on-header:#f3e9d6; --color-on-header-muted:rgba(243,233,214,0.72);
+    --focus-on-header:#e8c976;
+    /* dark cozy: light salmon ring #e8897a on #221c16 card ~= 4.6:1 (>=3:1) */
+    --color-focus: var(--color-primary-light);
+
+    --shadow-sm:0 1px 2px rgba(0,0,0,0.5); --shadow-md:0 4px 14px rgba(0,0,0,0.55);
+    --shadow-lg:0 12px 30px rgba(0,0,0,0.62); --shadow-xl:0 26px 52px rgba(0,0,0,0.72);
+
+    --color-info-bg:#16242a; --color-info-fg:#a9cdd6; --color-info-border:#2f4a52;
+    --color-success-bg:#12281b; --color-success-fg:#84d3a2; --color-success-border:#2f5740;
+    --color-error-bg:#2e1513; --color-error-fg:#f0a39b; --color-error-border:#5e2c28;
+
+    --color-thead-bg:#2c251d; --color-thead-fg:#f0e6d6;
+    --color-row-hover:#1d1813; --color-row-me:#2e2410;
+
+    --grad-podium-1: linear-gradient(135deg, #8a6a1c, #d2a73f);
+    --grad-podium-2: linear-gradient(135deg, #54504a, #837d72);
+    --grad-podium-3: linear-gradient(135deg, #6a4828, #a06b3c);
+    --color-on-podium:#fff6e6;
+
+    --color-badge-neutral-bg:#2c251d; --color-badge-neutral-fg:#f0e6d6; --color-badge-neutral-border:#5a4d3a;
+  }
+}

@@ -1,0 +1,128 @@
+/* Accessibility & Focus States */
+
+/* Focus outline - 4px minimum for AODA */
+*:focus {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-offset);
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-offset);
+}
+
+button:focus,
+a:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-to-main:focus {
+  top: 0;
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  button, input, textarea, select {
+    border-width: 2px;
+  }
+  
+  body {
+    letter-spacing: 0.05em;
+  }
+}
+
+/* Reduced-motion is handled comprehensively in motion.css (also resets
+   html scroll-behavior and neutralizes page-enter/veil/confetti). */
+
+/* Large touch targets for mobile */
+button, a[role="button"], input[type="checkbox"], input[type="radio"] {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* body color/background are now driven by theme tokens (components.css);
+   the old hardcoded light-only pin was REMOVED so dark/cozy themes work. */
+
+/* Link styling - underline is visible, not color only */
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+a:visited {
+  color: var(--color-primary-dark);
+}
+
+a:hover {
+  text-decoration-thickness: 3px;
+}
+
+/* Ensure form labels are visible */
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text);
+}
+
+/* Error states are more than just color */
+input[aria-invalid="true"] {
+  border-color: var(--color-error);
+  border-width: 2px;
+}
+
+input[aria-invalid="true"]::after {
+  content: " ⚠";
+}
+
+/* Visible focus for custom elements */
+[role="button"]:focus,
+[role="menuitem"]:focus,
+[role="tab"]:focus {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+/* Ensure scrollable regions are keyboard accessible */
+.scrollable {
+  overflow-y: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scrollable:focus {
+  outline: var(--focus-outline);
+}
