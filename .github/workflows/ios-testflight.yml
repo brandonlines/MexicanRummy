@@ -1,0 +1,63 @@
+name: iOS TestFlight
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ios-testflight-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  testflight:
+    # Stays OFF until you opt in (after adding the secrets below):
+    #   gh variable set TESTFLIGHT_ENABLED --body true
+    if: ${{ vars.TESTFLIGHT_ENABLED == 'true' }}
+    runs-on: macos-15
+    timeout-minutes: 40
+    env:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify required secrets are present
+        run: |
+          missing=""
+          for v in ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_CONTENT APPLE_TEAM_ID; do
+            if [ -z "${!v}" ]; then missing="$missing $v"; fi
+          done
+          [ -z "${{ secrets.VITE_SUPABASE_URL }}" ] && missing="$missing VITE_SUPABASE_URL"
+          [ -z "${{ secrets.VITE_SUPABASE_ANON_KEY }}" ] && missing="$missing VITE_SUPABASE_ANON_KEY"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing GitHub secrets:$missing — add them in Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Write src/.env (Vite bakes VITE_* in at build time)
+        run: |
+          {
+            printf 'VITE_SUPABASE_URL=%s\n' "${{ secrets.VITE_SUPABASE_URL }}"
+            printf 'VITE_SUPABASE_ANON_KEY=%s\n' "${{ secrets.VITE_SUPABASE_ANON_KEY }}"
+          } > src/.env
+
+      - name: Build web bundle
+        run: |
+          npm install
+          npm run build
+
+      - name: Sync Capacitor iOS (copies dist → ios, resolves SPM)
+        run: npx cap sync ios
+
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - name: Build & upload to TestFlight (fastlane)
+        run: fastlane ios beta
